@@ -1,1 +1,55 @@
-amogus
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Nouredeen Ahmed Mahmoud Ali HAMMAD - 2121221362 */
+
+        @keyframes animation {
+            0% {
+              border-radius: 0px;
+              background-color: red;
+              transform: translate(0px,0px) rotate(0deg) scale(1);
+            }
+            25% {
+              border-radius: 50px;
+              background-color: orange;
+              transform: translate(500px,0px) rotate(45deg) scale(1.5);
+            }
+            50% {
+              border-radius: 100px;
+              background-color: yellow;
+              transform: translate(500px, 500px) rotate(90deg) scale(2);
+            }
+            75% {
+              border-radius: 50px;
+              background-color: green;
+              transform: translate(0px, 500px) rotate(135deg) scale(1.5);
+            }
+            100% {
+              border-radius: 0px;
+              background-color: blue;
+              transform: translateY(0px, 0px) rotate(180deg) scale(1);
+            }
+          }
+
+    </style>
+</head>
+<body>
+    <h1>Nouredeen Hammad</h1>
+    <br>
+    <div id="box"></div>
+    <script>
+
+        function animateBox() {
+            var box = document.getElementById("box");
+            box.style.width = "100px";
+            box.style.height = "100px";
+            box.style.border = "3px solid";
+            box.style.animation = "animation 4s infinite";
+        }
+
+        animateBox();
+
+    </script>
+</body>
+</html>
