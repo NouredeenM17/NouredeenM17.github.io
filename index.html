@@ -1,55 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <style>
-        /* Nouredeen Ahmed Mahmoud Ali HAMMAD - 2121221362 */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trello-like Project</title>
+  <link rel="stylesheet" href="styles.css"> <!-- You can create this file later -->
+  <style>
+    .column {
+      display: inline-block;
+      vertical-align: top;
+      width: 300px;
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f4f4f4;
+    }
+    
+    .note {
+      margin: 0 0 10px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      cursor: grab;
+    }
 
-        @keyframes animation {
-            0% {
-              border-radius: 0px;
-              background-color: red;
-              transform: translate(0px,0px) rotate(0deg) scale(1);
-            }
-            25% {
-              border-radius: 50px;
-              background-color: orange;
-              transform: translate(500px,0px) rotate(45deg) scale(1.5);
-            }
-            50% {
-              border-radius: 100px;
-              background-color: yellow;
-              transform: translate(500px, 500px) rotate(90deg) scale(2);
-            }
-            75% {
-              border-radius: 50px;
-              background-color: green;
-              transform: translate(0px, 500px) rotate(135deg) scale(1.5);
-            }
-            100% {
-              border-radius: 0px;
-              background-color: blue;
-              transform: translateY(0px, 0px) rotate(180deg) scale(1);
-            }
-          }
-
-    </style>
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    
+    .popup button {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Nouredeen Hammad</h1>
-    <br>
-    <div id="box"></div>
-    <script>
+  <h1>NuretTrello</h1>
+  <div id="column1" class="column">
+    <button class="add-button" onclick="openPopup('column1')">+</button>
+    <!-- Notes for column 1 go here -->
+  </div>
+  <div id="column2" class="column">
+    <button class="add-button" onclick="openPopup('column2')">+</button>
+    <!-- Notes for column 2 go here -->
+  </div>
+  <div id="column3" class="column">
+    <button class="add-button" onclick="openPopup('column3')">+</button>
+    <!-- Notes for column 3 go here -->
+  </div>
 
-        function animateBox() {
-            var box = document.getElementById("box");
-            box.style.width = "100px";
-            box.style.height = "100px";
-            box.style.border = "3px solid";
-            box.style.animation = "animation 4s infinite";
-        }
-
-        animateBox();
-
-    </script>
+  <script src="main.js"></script> <!-- You can create this file later -->
+  <script src="Note.js"></script>
+  <script src="NotesManager.js"></script>
 </body>
 </html>
