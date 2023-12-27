@@ -6,6 +6,7 @@ class Note {
       this.element = this.createNoteElement();
     }
   
+    // Creates the HTML element of the note
     createNoteElement() {
       const note = document.createElement('div');
       note.classList.add('note');
@@ -32,10 +33,6 @@ class Note {
     formatDate(date) {
       // Add your date formatting logic here
       return date.toLocaleString();
-    }
-
-    getNodeObject(node_id){
-      return
     }
   }
   
