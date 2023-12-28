@@ -16,6 +16,19 @@
     cursor: grab;
   }
 
+  .text-editor {
+    width: 200px;
+    height: 300px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+
+  .date-created {
+    font-size: 12px;
+    color: #666666;
+  }
+
   .popup {
     position: fixed;
     top: 50%;
