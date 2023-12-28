@@ -64,6 +64,7 @@ var notes_manager;
     
         // Create text area element
         const textarea = document.createElement('textarea');
+        textarea.classList.add('text-editor');
 
         // Create save button element
         const saveButton = document.createElement('button');
