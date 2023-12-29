@@ -6,7 +6,7 @@ class NotesManager {
   
     // Creates a new node, adds it to the note array and returns it
     createNote(content) {
-      const note = new Note(content);
+      const note = new Note(content, this);
       this.notes.push(note);
       return note;
     }
@@ -15,5 +15,10 @@ class NotesManager {
     getNoteById(noteId) {
       return this.notes.find(note => note.id === noteId);
     }
+
+    removeNoteById(id){
+      this.notes = this.notes.filter(note => note.id !== id);
+    }
+    
   }
   

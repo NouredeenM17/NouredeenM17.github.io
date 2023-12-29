@@ -1,8 +1,9 @@
 class Note {
-    constructor(content) {
+    constructor(content, notes_manager) {
       this.id = `note-${Date.now()}`;
       this.content = content || '';
       this.dateCreated = new Date();
+      this.notesManager = notes_manager;
       this.element = this.createNoteElement();
     }
   
@@ -13,6 +14,11 @@ class Note {
       note.setAttribute('draggable', 'true');
       note.setAttribute('id', this.id);
       note.addEventListener('dragstart', this.handleDragStart.bind(this));
+
+      // Create the delete button
+      const deleteButton = document.createElement('button');
+      deleteButton.innerText = 'Delete';
+      deleteButton.addEventListener('click', this.deleteNote.bind(this));
 
       // Create the edit button
       const editButton = document.createElement('button');
@@ -27,6 +33,7 @@ class Note {
       dateDiv.classList.add('date-created');
       dateDiv.innerText = `Created on: ${this.formatDate(this.dateCreated)}`;
 
+      note.appendChild(deleteButton);
       note.appendChild(editButton);
       note.appendChild(contentDiv);
       note.appendChild(dateDiv);
@@ -34,6 +41,14 @@ class Note {
       return note;
     }
   
+    deleteNote() {
+      // Remove the note element from the DOM
+      this.element.parentNode.removeChild(this.element);
+
+      // Remove the note from the NotesManager
+      this.notesManager.removeNoteById(this.id);
+    }
+
     handleDragStart(e) {
       e.dataTransfer.setData('text/plain', this.id);
     }
