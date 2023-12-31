@@ -23,7 +23,7 @@ class Note {
       // Create the edit button
       const editButton = document.createElement('button');
       editButton.innerText = 'Edit';
-      editButton.addEventListener('click', this.openEditNotePopup.bind(this));
+      editButton.addEventListener('click', this.openNotePopup.bind(this));
 
       const contentDiv = document.createElement('div');
       contentDiv.classList.add('content-div');
@@ -59,7 +59,7 @@ class Note {
     }
 
     // Function to open the popup for a specific column.
-    openEditNotePopup() {
+    openNotePopup() {
         
       // Create popup element
       const popup = document.createElement('div');
