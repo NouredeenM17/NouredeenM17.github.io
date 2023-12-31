@@ -50,7 +50,7 @@ var notes_manager;
 
       // Function to open the popup for a specific column.
       function openNewNotePopup(columnId) {
-        
+
         // Create popup element
         const popup = document.createElement('div');
         popup.classList.add('popup');
