@@ -1,9 +1,10 @@
 class Note {
-    constructor(content, notes_manager) {
+    constructor(content, columnId, notes_manager) {
       this.id = `note-${Date.now()}`;
       this.content = content || '';
       this.dateCreated = new Date();
-      this.notesManager = notes_manager;
+      this.notes_manager = notes_manager;
+      this.columnId = columnId || '';
       this.element = this.createNoteElement();
     }
   
@@ -40,19 +41,33 @@ class Note {
   
       return note;
     }
+
+    serialize() {
+      // Convert the Note instance to a plain object for storage
+      return {
+        id: this.id,
+        content: this.content,
+        dateCreated: this.dateCreated,
+        columnId: this.columnId,
+      };
+    }
   
     deleteNote() {
       // Remove the note element from the DOM
       this.element.parentNode.removeChild(this.element);
 
-      // Remove the note from the NotesManager
-      this.notesManager.removeNoteById(this.id);
+      // Remove the note from the notes_manager
+      this.notes_manager.removeNoteById(this.id);
     }
 
     handleDragStart(e) {
       e.dataTransfer.setData('text/plain', this.id);
     }
   
+    updateColumnId(newColumnId) {
+      this.columnId = newColumnId;
+    }
+
     // Formats the date into string
     formatDate(date) {
       return date.toLocaleString();
@@ -85,6 +100,7 @@ class Note {
         this.content = textarea.value;
         document.body.removeChild(popup);
         this.updateNoteElementContent();
+        notes_manager.saveToLocalStorage();
       });
   
       popup.appendChild(closeButton);

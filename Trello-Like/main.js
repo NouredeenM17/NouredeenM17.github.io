@@ -2,8 +2,12 @@
 // after the HTML content has been fully loaded and parsed.
 document.addEventListener('DOMContentLoaded', init);
 var notes_manager;
+var column_titles = ['To do', 'Research', 'In Progress', 'Done'];
 
   function init(){
+        // Builds the 4 columns
+        buildColumns();
+
         // Select all elements with the class 'column' and store them in the 'columns' variable
         const columns = document.querySelectorAll('.column');
         
@@ -21,21 +25,49 @@ var notes_manager;
             
             // Retrieve the note ID that was set during the dragstart event
             const noteId = e.dataTransfer.getData('text/plain');
-            
-            // Get the note object using the note ID
             const note = notes_manager.getNoteById(noteId);
+            const newColumnId = column.id;
+
+            // Update the note's columnId
+            const noteInstance = notes_manager.notes.find(note => note.id === noteId);
+            if (noteInstance) {
+              noteInstance.updateColumnId(newColumnId);
+            }
       
             // Append the note element to the column where it was dropped
             column.appendChild(note.element);
+            notes_manager.saveToLocalStorage();
           });
         });
       
         // Initializing notes manager object
         notes_manager = new NotesManager();
 
-        // Add a default note
-        var default_note = notes_manager.createNote("This is a note!");
-        addNoteToColumn(default_note,'column1');
+          //clearLocalStorage();
+        notes_manager.loadFromLocalStorage();        
+      }
+
+      // Function to build columns
+      function buildColumns(){
+        var body = document.body;
+      
+        for (var i = 0; i < column_titles.length; i++) {
+          var column = document.createElement('div');
+          column.id = 'column' + (i + 1);
+          column.className = 'column';
+      
+          var h3 = document.createElement('h3');
+          h3.textContent = column_titles[i];
+          column.appendChild(h3);
+      
+          var button = document.createElement('button');
+          button.className = 'add-button';
+          button.setAttribute('onclick', "openNewNotePopup('column" + (i + 1) + "')");
+          button.textContent = '+';
+          column.appendChild(button);
+      
+          body.appendChild(column);
+        }
       }
 
       // Function to add a note to a specified column
@@ -71,7 +103,7 @@ var notes_manager;
         saveButton.innerText = 'Save';
         saveButton.addEventListener('click', () => {
           content = textarea.value;
-          var newNote = notes_manager.createNote(content);
+          var newNote = notes_manager.createNote(content, columnId);
           document.body.removeChild(popup);
           addNoteToColumn(newNote, columnId);
         });
@@ -81,5 +113,10 @@ var notes_manager;
         popup.appendChild(saveButton);
     
         document.body.appendChild(popup);
+      }
+
+      function clearLocalStorage() {
+        localStorage.removeItem('notes');
+        console.log('Local storage for notes cleared.');
       }
   
