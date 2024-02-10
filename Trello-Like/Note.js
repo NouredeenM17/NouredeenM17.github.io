@@ -1,7 +1,8 @@
 class Note {
-  constructor(content, columnId, notes_manager) {
+  constructor(content, columnId, notes_manager, title) {
     this.id = `note-${Date.now()}`;
     this.content = content || "";
+    this.title = title || "Untitled";
     this.dateCreated = new Date();
     this.notes_manager = notes_manager;
     this.columnId = columnId || "";
@@ -26,9 +27,9 @@ class Note {
     editButton.innerText = "Edit";
     editButton.addEventListener("click", this.openNotePopup.bind(this));
 
-    const contentDiv = document.createElement("div");
-    contentDiv.classList.add("content-div");
-    contentDiv.innerText = this.content;
+    const titleDiv = document.createElement("div");
+    titleDiv.classList.add("title-div");
+    titleDiv.innerText = this.title;
 
     const dateDiv = document.createElement("div");
     dateDiv.classList.add("date-created");
@@ -36,7 +37,7 @@ class Note {
 
     note.appendChild(deleteButton);
     note.appendChild(editButton);
-    note.appendChild(contentDiv);
+    note.appendChild(titleDiv);
     note.appendChild(dateDiv);
 
     return note;
@@ -46,6 +47,7 @@ class Note {
     // Convert the Note instance to a plain object for storage
     return {
       id: this.id,
+      title: this.title,
       content: this.content,
       dateCreated: this.dateCreated,
       columnId: this.columnId,
@@ -86,6 +88,11 @@ class Note {
       document.body.removeChild(popup);
     });
 
+    // Create title area element and place current title
+    const title_area = document.createElement("textarea");
+    title_area.classList.add("title-editor");
+    title_area.value = this.title;
+
     // Create text area element and place current content
     const textarea = document.createElement("textarea");
     textarea.classList.add("text-editor");
@@ -103,6 +110,7 @@ class Note {
     });
 
     popup.appendChild(closeButton);
+    popup.appendChild(title_area);
     popup.appendChild(textarea);
     popup.appendChild(saveButton);
 
@@ -112,9 +120,14 @@ class Note {
   updateNoteElementContent() {
     // Update the content in the note element
     const contentDiv = this.element.querySelector(".content-div");
+    const titleDiv = this.element.querySelector(".title-div");
 
     if (contentDiv) {
       contentDiv.innerText = this.content;
+    }
+
+    if (titleDiv) {
+      titleDiv.innerText = this.title;
     }
   }
 }

@@ -5,8 +5,8 @@ class NotesManager {
   }
 
   // Creates a new note, adds it to the note array and returns it
-  createNote(content, columnId) {
-    const note = new Note(content, columnId, this);
+  createNote(content, columnId, title) {
+    const note = new Note(content, columnId, this, title);
     this.notes.push(note);
     this.saveToLocalStorage();
     return note;
@@ -46,15 +46,15 @@ class NotesManager {
   }
 
   buildDefaultNotes() {
-    this.createNoteWithDelay("This is a task I want to do.", "column1", 0);
-    this.createNoteWithDelay("Still figuring this out..", "column2", 150);
-    this.createNoteWithDelay("I am currently doing this task.", "column3", 300);
-    this.createNoteWithDelay("I just finished this task!", "column4", 450);
+    this.createNoteWithDelay("This is a task I want to do.", "Lorem Ipsum", "column1", 0);
+    this.createNoteWithDelay("Still figuring this out..", "Lorem Ipsum", "column2", 150);
+    this.createNoteWithDelay("I am currently doing this task.", "Lorem Ipsum", "column3", 300);
+    this.createNoteWithDelay("I just finished this task!", "Lorem Ipsum", "column4", 450);
   }
 
-  createNoteWithDelay(content, columnId, delay) {
+  createNoteWithDelay(title, content, columnId, delay) {
     setTimeout(() => {
-      var note = this.createNote(content, columnId);
+      var note = this.createNote(content, columnId, title);
       const column = document.getElementById(columnId);
       column.appendChild(note.element);
     }, delay);

@@ -44,7 +44,7 @@ function init() {
   // Initializing notes manager object
   notes_manager = new NotesManager();
 
-  //clearLocalStorage();
+  clearLocalStorage();
   notes_manager.loadFromLocalStorage();
 }
 
@@ -93,22 +93,28 @@ function openNewNotePopup(columnId) {
     document.body.removeChild(popup);
   });
 
+  // Create title area element
+  const titleArea = document.createElement("textarea");
+  titleArea.classList.add("title-editor");
+
   // Create text area element
-  const textarea = document.createElement("textarea");
-  textarea.classList.add("text-editor");
+  const contentArea = document.createElement("textarea");
+  contentArea.classList.add("text-editor");
 
   // Create save button element
   const saveButton = document.createElement("button");
   saveButton.innerText = "Save";
   saveButton.addEventListener("click", () => {
-    content = textarea.value;
-    var newNote = notes_manager.createNote(content, columnId);
+    content = contentArea.value;
+    title = titleArea.value;
+    var newNote = notes_manager.createNote(content, columnId, title);
     document.body.removeChild(popup);
     addNoteToColumn(newNote, columnId);
   });
 
   popup.appendChild(closeButton);
-  popup.appendChild(textarea);
+  popup.appendChild(titleArea);
+  popup.appendChild(contentArea);
   popup.appendChild(saveButton);
 
   document.body.appendChild(popup);
