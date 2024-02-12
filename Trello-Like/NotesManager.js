@@ -63,7 +63,7 @@ class NotesManager {
         this.notes = parsedNotes.map((noteData) => {
             const note = new Note();
             Object.assign(note, noteData);
-            note.this = this;
+            note.notesManager = this;
             return note;
         });
         this.attachNotesToColumns();

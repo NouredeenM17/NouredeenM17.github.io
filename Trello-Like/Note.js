@@ -1,10 +1,10 @@
 class Note {
-  constructor(content, columnId, notes_manager, title) {
+  constructor(content, columnId, notesManager, title) {
     this.id = `note-${Date.now()}`;
     this.content = content || "";
     this.title = title || "Untitled";
     this.dateCreated = new Date();
-    this.notes_manager = notes_manager;
+    this.notesManager = notesManager;
     this.columnId = columnId || "";
     this.element = this.createNoteElement();
   }
@@ -63,8 +63,8 @@ class Note {
     // Remove the note element from the DOM
     this.element.parentNode.removeChild(this.element);
 
-    // Remove the note from the notes_manager
-    this.notes_manager.removeNoteById(this.id);
+    // Remove the note from the notesManager
+    this.notesManager.removeNoteById(this.id);
   }
 
   handleDragStart(e) {
@@ -111,7 +111,7 @@ class Note {
       this.content = textarea.value;
       document.body.removeChild(popup);
       this.updateNoteElementContent();
-      notes_manager.saveNotesToLocalStorage();
+      this.notesManager.saveNotesToLocalStorage();
     });
 
     popup.appendChild(closeButton);
