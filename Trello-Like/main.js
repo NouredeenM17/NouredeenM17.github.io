@@ -2,17 +2,45 @@
 // after the HTML content has been fully loaded and parsed.
 document.addEventListener("DOMContentLoaded", init);
 var notes_manager;
-var column_titles = ["To do", "Research", "In Progress", "Done"];
+var column_titles = ["To do", "In Progress", "Done"];
 
 function init() {
   // Builds the 4 columns
   buildColumns();
 
-  // Select all elements with the class 'column' and store them in the 'columns' variable
-  const columns = document.querySelectorAll(".column");
+  // Initializing notes manager object
+  notes_manager = new NotesManager();
 
-  // Iterate over each column.
-  columns.forEach((column) => {
+  clearLocalStorage();
+  notes_manager.loadNotesFromLocalStorage();
+}
+
+// Function to build columns
+function buildColumns() {
+  var body = document.body;
+
+  for (var i = 0; i < column_titles.length; i++) {
+    let column = document.createElement("div");
+    column.id = "column" + (i + 1);
+    column.className = "column";
+
+    let editableTitle = document.createElement("div");
+    editableTitle.className = "editable-header";
+
+    let h3 = document.createElement("h3");
+    h3.contentEditable = "false";
+    h3.textContent = column_titles[i];
+    editableTitle.appendChild(h3);
+    column.appendChild(editableTitle);
+
+    let button = document.createElement("button");
+    button.className = "add-button";
+    button.setAttribute("onclick", "openNewNotePopup('column" + (i + 1) + "')");
+    button.textContent = "+";
+    column.appendChild(button);
+
+    body.appendChild(column);
+
     column.addEventListener("dragover", function (e) {
       // Prevent the default behavior of the browser when a dragged element is over the column
       e.preventDefault();
@@ -37,38 +65,41 @@ function init() {
 
       // Append the note element to the column where it was dropped
       column.appendChild(note.element);
-      notes_manager.saveToLocalStorage();
+      notes_manager.saveNotesToLocalStorage();
     });
-  });
 
-  // Initializing notes manager object
-  notes_manager = new NotesManager();
-
-  clearLocalStorage();
-  notes_manager.loadFromLocalStorage();
+    setUpTitleEventListeners(h3);
+  }
 }
 
-// Function to build columns
-function buildColumns() {
-  var body = document.body;
+function setUpTitleEventListeners(title){
 
-  for (var i = 0; i < column_titles.length; i++) {
-    var column = document.createElement("div");
-    column.id = "column" + (i + 1);
-    column.className = "column";
+  var isEditing;
 
-    var h3 = document.createElement("h3");
-    h3.textContent = column_titles[i];
-    column.appendChild(h3);
+  // Double-click event handler
+  title.addEventListener("dblclick", () => {
+    title.contentEditable = true;
+    title.focus(); // Set focus to the header for editing
+    isEditing = true;
+  });
 
-    var button = document.createElement("button");
-    button.className = "add-button";
-    button.setAttribute("onclick", "openNewNotePopup('column" + (i + 1) + "')");
-    button.textContent = "+";
-    column.appendChild(button);
+  // Keydown event handler
+  title.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent line break
+      title.contentEditable = false;
+      isEditing = false;
+    }
+  });
 
-    body.appendChild(column);
-  }
+  // Click event handler for the entire document
+  document.addEventListener('click', (event) => {
+  if (isEditing && event.target !== title) {
+      // Clicked outside the header while editing
+      title.contentEditable = false;
+      isEditing = false;
+    }
+  });
 }
 
 // Function to add a note to a specified column
@@ -121,6 +152,6 @@ function openNewNotePopup(columnId) {
 }
 
 function clearLocalStorage() {
-  localStorage.removeItem("notes");
+  localStorage.removeItem("nt_notes");
   console.log("Local storage for notes cleared.");
 }

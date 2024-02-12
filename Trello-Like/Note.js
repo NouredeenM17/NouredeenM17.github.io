@@ -31,6 +31,10 @@ class Note {
     titleDiv.classList.add("title-div");
     titleDiv.innerText = this.title;
 
+    const contentDiv = document.createElement("div");
+    contentDiv.classList.add("content-div");
+    contentDiv.innerText = this.content;
+
     const dateDiv = document.createElement("div");
     dateDiv.classList.add("date-created");
     dateDiv.innerText = `Created on: ${this.formatDate(this.dateCreated)}`;
@@ -38,6 +42,7 @@ class Note {
     note.appendChild(deleteButton);
     note.appendChild(editButton);
     note.appendChild(titleDiv);
+    note.appendChild(contentDiv);
     note.appendChild(dateDiv);
 
     return note;
@@ -106,7 +111,7 @@ class Note {
       this.content = textarea.value;
       document.body.removeChild(popup);
       this.updateNoteElementContent();
-      notes_manager.saveToLocalStorage();
+      notes_manager.saveNotesToLocalStorage();
     });
 
     popup.appendChild(closeButton);

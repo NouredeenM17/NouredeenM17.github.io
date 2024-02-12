@@ -1,4 +1,4 @@
-// This class is responsible for creating notes and managing them all
+// This class is responsible for creating notes and managing them all, and managing their column names
 class NotesManager {
   constructor() {
     this.notes = [];
@@ -8,7 +8,7 @@ class NotesManager {
   createNote(content, columnId, title) {
     const note = new Note(content, columnId, this, title);
     this.notes.push(note);
-    this.saveToLocalStorage();
+    this.saveNotesToLocalStorage();
     return note;
   }
 
@@ -19,37 +19,13 @@ class NotesManager {
 
   removeNoteById(id) {
     this.notes = this.notes.filter((note) => note.id !== id);
-    this.saveToLocalStorage();
-  }
-
-  // Save notes to local storage
-  saveToLocalStorage() {
-    const serializedNotes = this.notes.map((note) => note.serialize());
-    localStorage.setItem("notes", JSON.stringify(serializedNotes));
-  }
-
-  // Load notes from local storage
-  loadFromLocalStorage() {
-    const storedNotes = localStorage.getItem("notes");
-    if (storedNotes) {
-      const parsedNotes = JSON.parse(storedNotes);
-      this.notes = parsedNotes.map((noteData) => {
-        const note = new Note();
-        Object.assign(note, noteData);
-        note.notes_manager = this;
-        return note;
-      });
-      this.attachNotesToColumns();
-    } else {
-      this.buildDefaultNotes();
-    }
+    this.saveNotesToLocalStorage();
   }
 
   buildDefaultNotes() {
     this.createNoteWithDelay("This is a task I want to do.", "Lorem Ipsum", "column1", 0);
-    this.createNoteWithDelay("Still figuring this out..", "Lorem Ipsum", "column2", 150);
-    this.createNoteWithDelay("I am currently doing this task.", "Lorem Ipsum", "column3", 300);
-    this.createNoteWithDelay("I just finished this task!", "Lorem Ipsum", "column4", 450);
+    this.createNoteWithDelay("I am currently doing this task.", "Lorem Ipsum", "column2", 300);
+    this.createNoteWithDelay("I just finished this task!", "Lorem Ipsum", "column3", 450);
   }
 
   createNoteWithDelay(title, content, columnId, delay) {
@@ -61,7 +37,7 @@ class NotesManager {
   }
 
   attachNotesToColumns() {
-    notes_manager.notes.forEach((note) => {
+    this.notes.forEach((note) => {
       console.log(note);
 
       const column = document.getElementById(note.columnId);
@@ -73,5 +49,26 @@ class NotesManager {
         console.error(`Column with ID '${note.columnId}' not found.`);
       }
     });
+  }
+
+  saveNotesToLocalStorage () {
+    const serializedNotes = this.notes.map((note) => note.serialize());
+    localStorage.setItem("nt_notes", JSON.stringify(serializedNotes));
+  }
+
+  loadNotesFromLocalStorage () {
+    const storedNotes = localStorage.getItem("nt_notes");
+    if (storedNotes) {
+        const parsedNotes = JSON.parse(storedNotes);
+        this.notes = parsedNotes.map((noteData) => {
+            const note = new Note();
+            Object.assign(note, noteData);
+            note.this = this;
+            return note;
+        });
+        this.attachNotesToColumns();
+    } else {
+      this.buildDefaultNotes();
+    }
   }
 }
