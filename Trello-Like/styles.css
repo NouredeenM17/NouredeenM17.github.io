@@ -2,6 +2,7 @@
     display: inline-block;
     vertical-align: top;
     width: 300px;
+    min-height: 300px;
     margin: 10px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -43,4 +44,40 @@
   
   .popup button {
     margin-bottom: 10px;
+  }
+
+  .title-div {
+    font-weight: bold;
+  }
+
+  .content-div {
+    max-height: 80px;
+    min-height: 35px;
+    position: relative; /* Required for positioning the pseudo-element */
+    overflow: hidden;
+    
+  }
+
+  .content-div:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgb(255, 255, 255) 5px, transparent);
+  }
+
+  .editable-header {
+    user-select: none; /* Prevent text selection */
+    -webkit-user-select: none; /* For Webkit browsers (Chrome, Safari) */
+    -moz-user-select: none; /* For Firefox */
+    -ms-user-select: none; /* For IE10+ */
+    -o-user-select: none;
+  }
+
+  .editable-header h3[contenteditable="true"] {
+    /* Style for the editable header */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
   }
