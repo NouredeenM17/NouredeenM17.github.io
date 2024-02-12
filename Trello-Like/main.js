@@ -6,18 +6,34 @@ var columnTitles;
 var defaultColumnTitles = ["To do", "In Progress", "Done"];
 
 function init() {
-  // Builds the 4 columns
-  buildColumns();
-
   // Initializing notes manager object
   notesManager = new NotesManager();
 
+  // Builds the 4 columns
+  buildColumns();
+
   //clearLocalStorage();
-  notesManager.loadNotesFromLocalStorage();
+  //notesManager.loadNotesFromLocalStorage();
 }
 
 // Function to build columns
 function buildColumns() {
+
+  // Clear existing columns
+  const existingColumns = document.querySelectorAll('.column');
+  existingColumns.forEach(column => {
+    document.body.removeChild(column);
+  });
+  const existingAddColumnButtons = document.querySelectorAll('.add-column-button');
+  existingAddColumnButtons.forEach(button => {
+    document.body.removeChild(button);
+  });
+  const existingDeleteColumnButtons = document.querySelectorAll('.delete-column-button');
+  existingDeleteColumnButtons.forEach(button => {
+    document.body.removeChild(button);
+  });
+  
+
   var body = document.body;
 
   const storedColumnTitles = localStorage.getItem('nt_column_titles');
@@ -75,6 +91,58 @@ function buildColumns() {
 
     setUpTitleEventListeners(h3, i);
   }
+
+  // Add a single "Add" button on the far right
+  var addColumnButton = document.createElement("button");
+  addColumnButton.className = "add-column-button";
+  addColumnButton.setAttribute("onclick", "addNewColumn()");
+  addColumnButton.textContent = "+";
+  document.body.appendChild(addColumnButton);
+
+  // Add a single "Delete" button on the far right
+  var deleteColumnButton = document.createElement("button");
+  deleteColumnButton.className = "add-column-button";
+  deleteColumnButton.setAttribute("onclick", `deleteColumn(${columnTitles.length-1})`);
+  deleteColumnButton.textContent = "X";
+  document.body.appendChild(deleteColumnButton);
+
+  notesManager.loadNotesFromLocalStorage();
+}
+
+function addNewColumn () {
+  // Add a new column title at the end
+  columnTitles.push("Untitled");
+
+  // Save the updated column titles to local storage
+  localStorage.setItem('nt_column_titles', JSON.stringify(columnTitles));
+
+  // Rebuild columns with the updated titles
+  buildColumns();
+  
+}
+
+function deleteColumn (index) {
+  // Check if the column has notes
+  const columnId = "column" + (index + 1);
+  const column = document.getElementById(columnId);
+  if (column && column.children.length > 2) {
+    alert("Cannot delete a column with notes.");
+    return;
+  }
+
+  if (index === 0) {
+    alert("Cannot delete the first column.");
+    return;
+  }
+
+  // Delete the column title at the specified index
+  columnTitles.splice(index, 1);
+
+  // Save the updated column titles to local storage
+  localStorage.setItem('nt_column_titles', JSON.stringify(columnTitles));
+
+  // Rebuild columns with the updated titles
+  buildColumns();
 }
 
 function setUpTitleEventListeners(title, columnIndex){
