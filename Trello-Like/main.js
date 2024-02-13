@@ -18,27 +18,31 @@ function init() {
 
 // Function to build columns
 function buildColumns() {
-
   // Clear existing columns
-  const existingColumns = document.querySelectorAll('.column');
-  existingColumns.forEach(column => {
+  const existingColumns = document.querySelectorAll(".column");
+  existingColumns.forEach((column) => {
     document.body.removeChild(column);
   });
-  const existingAddColumnButtons = document.querySelectorAll('.add-column-button');
-  existingAddColumnButtons.forEach(button => {
+  const existingAddColumnButtons = document.querySelectorAll(
+    ".column-add-button"
+  );
+  existingAddColumnButtons.forEach((button) => {
     document.body.removeChild(button);
   });
-  const existingDeleteColumnButtons = document.querySelectorAll('.delete-column-button');
-  existingDeleteColumnButtons.forEach(button => {
+  const existingDeleteColumnButtons = document.querySelectorAll(
+    ".column-delete-button"
+  );
+  existingDeleteColumnButtons.forEach((button) => {
     document.body.removeChild(button);
   });
-  
 
   var body = document.body;
 
-  const storedColumnTitles = localStorage.getItem('nt_column_titles');
+  const storedColumnTitles = localStorage.getItem("nt_column_titles");
   console.log(storedColumnTitles);
-  columnTitles = storedColumnTitles ? JSON.parse(storedColumnTitles) : defaultColumnTitles;
+  columnTitles = storedColumnTitles
+    ? JSON.parse(storedColumnTitles)
+    : defaultColumnTitles;
 
   for (var i = 0; i < columnTitles.length; i++) {
     let column = document.createElement("div");
@@ -55,9 +59,11 @@ function buildColumns() {
     column.appendChild(editableTitle);
 
     let button = document.createElement("button");
-    button.className = "add-button";
+    const addIcon = document.createElement("span");
+    addIcon.classList.add("material-symbols-outlined");
+    addIcon.innerText = "add";
+    button.appendChild(addIcon);
     button.setAttribute("onclick", "openNewNotePopup('column" + (i + 1) + "')");
-    button.textContent = "+";
     column.appendChild(button);
 
     body.appendChild(column);
@@ -92,46 +98,55 @@ function buildColumns() {
     setUpTitleEventListeners(h3, i);
   }
 
-  // Add a single "Add" button on the far right
-  var addColumnButton = document.createElement("button");
-  addColumnButton.className = "add-column-button";
-  addColumnButton.setAttribute("onclick", "addNewColumn()");
-  addColumnButton.textContent = "+";
-  document.body.appendChild(addColumnButton);
-
   // Add a single "Delete" button on the far right
   var deleteColumnButton = document.createElement("button");
-  deleteColumnButton.className = "add-column-button";
-  deleteColumnButton.setAttribute("onclick", `deleteColumn(${columnTitles.length-1})`);
-  deleteColumnButton.textContent = "X";
+  deleteColumnButton.classList.add("column-delete-button");
+  const deleteIcon = document.createElement("span");
+  deleteIcon.classList.add("material-symbols-outlined");
+  deleteIcon.innerText = "delete";
+  deleteColumnButton.appendChild(deleteIcon);
+  deleteColumnButton.setAttribute(
+    "onclick",
+    `deleteColumn(${columnTitles.length - 1})`
+  );
   document.body.appendChild(deleteColumnButton);
+
+  // Add a single "Add" button on the far right
+  var addColumnButton = document.createElement("button");
+  addColumnButton.classList.add("column-add-button");
+  const addIcon = document.createElement("span");
+  addIcon.classList.add("material-symbols-outlined");
+  addIcon.innerText = "add";
+  addColumnButton.appendChild(addIcon);
+  addColumnButton.setAttribute("onclick", "addNewColumn()");
+  document.body.appendChild(addColumnButton);
 
   notesManager.loadNotesFromLocalStorage();
 }
 
-function addNewColumn () {
+function addNewColumn() {
   // Add a new column title at the end
   columnTitles.push("Untitled");
 
   // Save the updated column titles to local storage
-  localStorage.setItem('nt_column_titles', JSON.stringify(columnTitles));
+  localStorage.setItem("nt_column_titles", JSON.stringify(columnTitles));
 
   // Rebuild columns with the updated titles
   buildColumns();
-  
 }
 
-function deleteColumn (index) {
+function deleteColumn(index) {
   // Check if the column has notes
   const columnId = "column" + (index + 1);
   const column = document.getElementById(columnId);
-  if (column && column.children.length > 2) {
-    alert("Cannot delete a column with notes.");
-    return;
-  }
 
   if (index === 0) {
     alert("Cannot delete the first column.");
+    return;
+  }
+
+  if (column && column.children.length > 2) {
+    alert("Cannot delete the rightmost column because it has notes.");
     return;
   }
 
@@ -139,16 +154,16 @@ function deleteColumn (index) {
   columnTitles.splice(index, 1);
 
   // Save the updated column titles to local storage
-  localStorage.setItem('nt_column_titles', JSON.stringify(columnTitles));
+  localStorage.setItem("nt_column_titles", JSON.stringify(columnTitles));
 
   // Rebuild columns with the updated titles
   buildColumns();
 }
 
-function setUpTitleEventListeners(title, columnIndex){
-
+function setUpTitleEventListeners(title, columnIndex) {
   var isEditing;
   var tempValue;
+  const characterLimit = 45;
 
   // Double-click event handler
   title.addEventListener("dblclick", () => {
@@ -165,9 +180,15 @@ function setUpTitleEventListeners(title, columnIndex){
       title.contentEditable = false;
       isEditing = false;
 
-      columnTitles[columnIndex] = title.textContent;
-      localStorage.setItem('nt_column_titles', JSON.stringify(columnTitles));
+      if (title.textContent.length > characterLimit) {
+        title.textContent = title.textContent.slice(0, characterLimit);
+      }
+      if (title.textContent.length === 0) {
+        title.textContent = "Untitled";
+      }
 
+      columnTitles[columnIndex] = title.textContent;
+      localStorage.setItem("nt_column_titles", JSON.stringify(columnTitles));
     } else if (event.key === "Escape") {
       title.contentEditable = false;
       isEditing = false;
@@ -176,16 +197,24 @@ function setUpTitleEventListeners(title, columnIndex){
   });
 
   // Click event handler for the entire document
-  document.addEventListener('click', (event) => {
-  if (isEditing && event.target !== title) {
+  document.addEventListener("click", (event) => {
+    if (isEditing && event.target !== title) {
       // Clicked outside the header while editing
       title.contentEditable = false;
       isEditing = false;
 
+      if (title.textContent.length > characterLimit) {
+        title.textContent = title.textContent.slice(0, characterLimit);
+      }
+      if (title.textContent.length === 0) {
+        title.textContent = "Untitled";
+      }
+
       columnTitles[columnIndex] = title.textContent;
-      localStorage.setItem('nt_column_titles', JSON.stringify(columnTitles));
+      localStorage.setItem("nt_column_titles", JSON.stringify(columnTitles));
     }
   });
+
 }
 
 // Function to add a note to a specified column
@@ -203,11 +232,19 @@ function openNewNotePopup(columnId) {
   const popup = document.createElement("div");
   popup.classList.add("popup");
 
+  // Create popup overlay
+  const overlay = document.createElement("div");
+  overlay.classList.add("popup-overlay");
+
   // Create the close button
   const closeButton = document.createElement("button");
-  closeButton.innerText = "X";
+  const closeIcon = document.createElement("span");
+  closeIcon.classList.add("material-symbols-outlined");
+  closeIcon.innerText = "close";
+  closeButton.appendChild(closeIcon);
   closeButton.addEventListener("click", function () {
     document.body.removeChild(popup);
+    document.body.removeChild(overlay);
   });
 
   // Create title area element
@@ -220,12 +257,16 @@ function openNewNotePopup(columnId) {
 
   // Create save button element
   const saveButton = document.createElement("button");
-  saveButton.innerText = "Save";
+  const checkmarkIcon = document.createElement("span");
+  checkmarkIcon.classList.add("material-symbols-outlined");
+  checkmarkIcon.innerText = "done";
+  saveButton.appendChild(checkmarkIcon);
   saveButton.addEventListener("click", () => {
     content = contentArea.value;
     title = titleArea.value;
     var newNote = notesManager.createNote(content, columnId, title);
     document.body.removeChild(popup);
+    document.body.removeChild(overlay);
     addNoteToColumn(newNote, columnId);
   });
 
@@ -234,6 +275,7 @@ function openNewNotePopup(columnId) {
   popup.appendChild(contentArea);
   popup.appendChild(saveButton);
 
+  document.body.appendChild(overlay);
   document.body.appendChild(popup);
 }
 
@@ -241,6 +283,6 @@ function clearLocalStorage() {
   localStorage.removeItem("nt_notes");
   console.log("Local storage for notes cleared.");
 
-    localStorage.removeItem('nt_column_titles');
-    console.log('Column names in local storage cleared.');
+  localStorage.removeItem("nt_column_titles");
+  console.log("Column names in local storage cleared.");
 }

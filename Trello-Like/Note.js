@@ -3,7 +3,7 @@ class Note {
     this.id = `note-${Date.now()}`;
     this.content = content || "";
     this.title = title || "Untitled";
-    this.dateCreated = new Date();
+    this.dateCreated = this.formatDate(new Date());
     this.notesManager = notesManager;
     this.columnId = columnId || "";
     this.element = this.createNoteElement();
@@ -16,16 +16,20 @@ class Note {
     note.setAttribute("draggable", "true");
     note.setAttribute("id", this.id);
     note.addEventListener("dragstart", this.handleDragStart.bind(this));
+    note.addEventListener("click", (event) => {
+      console.log(event.target);
+      if (event.target !== deleteIcon && event.target !== deleteButton) {
+        this.openNotePopup();
+      }
+    });
 
     // Create the delete button
     const deleteButton = document.createElement("button");
-    deleteButton.innerText = "Delete";
+    const deleteIcon = document.createElement("span");
+    deleteIcon.classList.add("material-symbols-outlined");
+    deleteIcon.innerText = "delete";
+    deleteButton.appendChild(deleteIcon);
     deleteButton.addEventListener("click", this.deleteNote.bind(this));
-
-    // Create the edit button
-    const editButton = document.createElement("button");
-    editButton.innerText = "Edit";
-    editButton.addEventListener("click", this.openNotePopup.bind(this));
 
     const titleDiv = document.createElement("div");
     titleDiv.classList.add("title-div");
@@ -37,10 +41,9 @@ class Note {
 
     const dateDiv = document.createElement("div");
     dateDiv.classList.add("date-created");
-    dateDiv.innerText = `Created on: ${this.formatDate(this.dateCreated)}`;
+    dateDiv.innerText = `Created on: ${this.dateCreated}`;
 
     note.appendChild(deleteButton);
-    note.appendChild(editButton);
     note.appendChild(titleDiv);
     note.appendChild(contentDiv);
     note.appendChild(dateDiv);
@@ -86,39 +89,52 @@ class Note {
     const popup = document.createElement("div");
     popup.classList.add("popup");
 
+    // Create popup overlay
+    const overlay = document.createElement("div");
+    overlay.classList.add("popup-overlay");
+
     // Create the close button
     const closeButton = document.createElement("button");
-    closeButton.innerText = "X";
+    const closeIcon = document.createElement("span");
+    closeIcon.classList.add("material-symbols-outlined");
+    closeIcon.innerText = "close";
+    closeButton.appendChild(closeIcon);
     closeButton.addEventListener("click", function () {
+      document.body.removeChild(overlay);
       document.body.removeChild(popup);
     });
 
     // Create title area element and place current title
-    const title_area = document.createElement("textarea");
-    title_area.classList.add("title-editor");
-    title_area.value = this.title;
+    const titleArea = document.createElement("textarea");
+    titleArea.classList.add("title-editor");
+    titleArea.value = this.title;
 
     // Create text area element and place current content
-    const textarea = document.createElement("textarea");
-    textarea.classList.add("text-editor");
-    textarea.value = this.content;
+    const textArea = document.createElement("textarea");
+    textArea.classList.add("text-editor");
+    textArea.value = this.content;
 
     // Create save button element
     const saveButton = document.createElement("button");
-    saveButton.innerText = "Save";
+    const checkmarkIcon = document.createElement("span");
+    checkmarkIcon.classList.add("material-symbols-outlined");
+    checkmarkIcon.innerText = "done";
+    saveButton.appendChild(checkmarkIcon);
 
     saveButton.addEventListener("click", () => {
-      this.content = textarea.value;
+      this.content = textArea.value;
+      document.body.removeChild(overlay);
       document.body.removeChild(popup);
       this.updateNoteElementContent();
       this.notesManager.saveNotesToLocalStorage();
     });
 
     popup.appendChild(closeButton);
-    popup.appendChild(title_area);
-    popup.appendChild(textarea);
+    popup.appendChild(titleArea);
+    popup.appendChild(textArea);
     popup.appendChild(saveButton);
 
+    document.body.appendChild(overlay);
     document.body.appendChild(popup);
   }
 

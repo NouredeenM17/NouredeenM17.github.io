@@ -1,83 +1,132 @@
+body {
+  background-color: #1a1a2e;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif; /* Montserrat font for the rest */
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Montserrat', cursive;
+  font-weight: bold;
+}
+
+h3 {
+  text-align: center;
+  font-family: 'Montserrat', cursive;
+  font-weight: lighter;
+}
+
 .column {
-    display: inline-block;
-    vertical-align: top;
-    width: 300px;
-    min-height: 300px;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f4f4f4;
-  }
-  
-  .note {
-    margin: 0 0 10px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    cursor: grab;
-  }
+  display: inline-block;
+  vertical-align: top;
+  width: 300px;
+  min-height: 300px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #464866;
+  border-radius: 10px;
+}
 
-  .text-editor {
-    width: 200px;
-    height: 300px;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-  }
+.note {
+  margin: 0 0 10px;
+  padding: 10px;
+  background-color: #efefef;
+  border: 1px solid #ddd;
+  cursor: grab;
+  border-radius: 10px;
+}
 
-  .date-created {
-    font-size: 12px;
-    color: #666666;
-  }
+.date-created {
+  font-size: small;
+  color:#848484;
+}
 
-  .popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
-  
-  .popup button {
-    margin-bottom: 10px;
-  }
+.text-editor {
+  width: calc(100% - 40px);
+  height: 200px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
 
-  .title-div {
-    font-weight: bold;
-  }
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #efefef;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 10px;
+}
 
-  .content-div {
-    max-height: 80px;
-    min-height: 35px;
-    position: relative; /* Required for positioning the pseudo-element */
-    overflow: hidden;
-    
-  }
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  z-index: 999; /* Ensure the overlay is behind the popup */
+}
 
-  .content-div:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgb(255, 255, 255) 5px, transparent);
-  }
+button {
+  font-size: xx-small;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 50%;
+  background-color: #ff3e56;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
 
-  .editable-header {
-    user-select: none; /* Prevent text selection */
-    -webkit-user-select: none; /* For Webkit browsers (Chrome, Safari) */
-    -moz-user-select: none; /* For Firefox */
-    -ms-user-select: none; /* For IE10+ */
-    -o-user-select: none;
-  }
+.title-editor {
+  width: calc(100% - 40px);
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
 
-  .editable-header h3[contenteditable="true"] {
-    /* Style for the editable header */
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-  }
+.title-div {
+  font-weight: bold;
+  color:#0b0b0b;
+}
+
+.content-div {
+  max-height: 80px;
+  min-height: 35px;
+  position: relative;
+  overflow: hidden;
+  color:#0b0b0b;
+}
+
+.content-div:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #efefef 5px, transparent);
+}
+
+.editable-header {
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+
+.editable-header h3[contenteditable="true"] {
+  overflow: hidden;
+  background-color: #0b0b0b;
+  border: 1px solid #ccc;
+}
